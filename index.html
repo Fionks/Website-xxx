@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="id">
+<head>
+
+  <!-- 🔹 Informasi dasar & pengaturan responsif -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arsip Pemersatu Bangsa</title>
+
+  <!-- 🔹 Style dark minimalist + overlay views transparan -->
+  <style>
+    :root {
+      --gap: 16px;
+      --card-radius: 10px;
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #0f0f0f;
+      color: #f1f1f1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      flex: 1;
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    /* 🔹 Header */
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin: 0;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    h1:hover { color: #3b82f6; transition: .2s; }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    input[type="search"] {
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #2a2a2a;
+      background: #1a1a1a;
+      color: inherit;
+      min-width: 220px;
+    }
+
+    button {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 0;
+      background: #2563eb;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button:hover { background: #1e40af; }
+
+    /* 🔹 Teks pengunjung kecil */
+    .visitors-inline {
+      color: #cbd5e1;
+      font-size: 13px;
+      margin-left: 8px;
+    }
+
+    /* 🔹 Grid video */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--gap);
+    }
+
+    .card {
+      background: #181818;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      position: relative;
+      transition: transform .2s;
+      cursor: pointer;
+    }
+
+    .card:hover { transform: scale(1.03); }
+
+    .thumb {
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .meta { padding: 10px; }
+
+    .title {
+      font-size: 14px;
+      margin: 0 0 6px 0;
+      color: #fff;
+    }
+
+    /* 🔹 Overlay views besar semi-transparan */
+    .overlay {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      opacity: 0.95;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    .overlay small {
+      display:block;
+      font-size:11px;
+      color:#cbd5e1;
+      font-weight:400;
+    }
+
+    /* 🔹 Pagination */
+    .pagination {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .btn-page {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 0;
+      background: #1a1a1a;
+      color: #ddd;
+      cursor: pointer;
+    }
+
+    .btn-page:hover { background: #333; }
+    .btn-page[disabled] { opacity: .4; cursor:not-allowed; }
+
+    /* 🔹 Modal player */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 50;
+    }
+
+    .player {
+      background: #181818;
+      padding: 16px;
+      border-radius: 10px;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .player iframe, .player video {
+      width: 100%;
+      border-radius: 8px;
+      background: black;
+    }
+
+    .player h2 {
+      margin: 8px 0 0 0;
+      font-size: 16px;
+    }
+
+    .close {
+      background: #ef4444;
+      border: 0;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* 🔹 Footer */
+    footer {
+      text-align: center;
+      font-size: 14px;
+      color: #9ca3af;
+      padding: 20px;
+      border-top: 1px solid #222;
+      background: #111;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🔹 Kontainer utama -->
+  <div class="container">
+
+    <!-- 🔹 Header -->
+    <header>
+      <h1 id="homeTitle">Arsip Pemersatu Bangsa</h1>
+      <div class="actions">
+        <input id="search" type="search" placeholder="Cari video..." />
+        <button id="recommendBtn">Rekomendasi</button>
+        <div class="visitors-inline" id="visitorsHeader">Pengunjung hari ini: 0 (WIB)</div>
+      </div>
+    </header>
+
+    <!-- 🔹 Daftar video -->
+    <main>
+      <div id="grid" class="grid"></div>
+      <div class="pagination">
+        <button id="prev" class="btn-page">Prev</button>
+        <span id="page-info"></span>
+        <button id="next" class="btn-page">Next</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- 🔹 Modal player -->
+  <div id="modal" class="modal" style="display:none">
+    <div class="player">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2 id="player-title"></h2>
+        <button id="close" class="close">Tutup</button>
+      </div>
+      <div id="player-content"></div>
+      <p id="player-views" style="margin-top:8px;color:#9ca3af;font-size:13px"></p>
+    </div>
+  </div>
+
+  <!-- 🔹 Footer -->
+  <footer>
+    <div id="visitorsFooter">Pengunjung hari ini: 0 (WIB)</div>
+    <p style="margin-top:10px;"><strong>Arsip Pemersatu Bangsa</strong> — Platform streaming video nasional. Arsip pemersatu bangsa- Situs bokep terbaru dan terlengkap. Streaming dan
+download video bokep, video mesum, bokep viral dengan kualitas
+HD gratis. Update terbaru setiap hari.
+Video Bokep Indo HD Terbaru
+Nonton & Download Gratis
+Koleksi Terlengkap Update Harian
+Video Viral Indonesia
+Streaming Lancar Tanpa Buffering
+Semua Video Kualitas HD
+Bokep Indo Terpanas
+100% Gratis Tanpa Iklan.</p>
+    <p style="margin-top:6px;">© 2025 Arsip Pemersatu Bangsa. All rights reserved.</p>
+  </footer>
+
+  <!-- 🔹 Script utama -->
+  <script>
+    const PER_PAGE = 10;
+    const STORAGE_VIDEOS = 'videos';
+    const VISITOR_PREFIX = 'visitors_';
+
+    function getJakartaDateString() {
+      const now = new Date();
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const jakarta = new Date(utc + (7 * 60 * 60000));
+      const yyyy = jakarta.getFullYear();
+      const mm = String(jakarta.getMonth() + 1).padStart(2, '0');
+      const dd = String(jakarta.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function getVisitorsKeyForToday() {
+      return VISITOR_PREFIX + getJakartaDateString();
+    }
+
+    function getVisitorsToday() {
+      const key = getVisitorsKeyForToday();
+      return parseInt(localStorage.getItem(key) || '0', 10);
+    }
+
+    function incrementVisitorsToday() {
+      const key = getVisitorsKeyForToday();
+      const val = getVisitorsToday() + 1;
+      localStorage.setItem(key, String(val));
+      return val;
+    }
+
+    function updateVisitorsDisplay() {
+      const v = getVisitorsToday();
+      const label = `Pengunjung hari ini: ${v} (WIB)`;
+      document.getElementById('visitorsHeader').textContent = label;
+      document.getElementById('visitorsFooter').textContent = label;
+    }
+
+    // 🔹 Reset otomatis setiap 00:00 WIB
+    function autoResetVisitorsMidnight() {
+      let lastKey = getVisitorsKeyForToday();
+      setInterval(() => {
+        const nowKey = getVisitorsKeyForToday();
+        if (nowKey !== lastKey) {
+          if (!localStorage.getItem(nowKey)) localStorage.setItem(nowKey, '0');
+          lastKey = nowKey;
+          updateVisitorsDisplay();
+        }
+      }, 60000);
+    }
+
+    const grid = document.getElementById('grid');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const pageInfo = document.getElementById('page-info');
+    const searchInput = document.getElementById('search');
+    const homeTitle = document.getElementById('homeTitle');
+    const recommendBtn = document.getElementById('recommendBtn');
+    const modal = document.getElementById('modal');
+    const playerContent = document.getElementById('player-content');
+    const playerTitle = document.getElementById('player-title');
+    const playerViews = document.getElementById('player-views');
+    const closeBtn = document.getElementById('close');
+
+    function getVideos() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_VIDEOS) || '[]'); }
+      catch { return []; }
+    }
+
+    function getViewsKey(id) { return `views_${id}`; }
+    function getViews(id) { return parseInt(localStorage.getItem(getViewsKey(id)) || '0', 10); }
+    function incrementViews(id) {
+      const v = getViews(id) + 1;
+      localStorage.setItem(getViewsKey(id), String(v));
+      return v;
+    }
+
+    let currentPage = 1;
+    let query = '';
+
+    function filteredVideos() {
+      const vids = getVideos().slice().sort((a,b)=>b.timestamp - a.timestamp);
+      if (!query) return vids;
+      return vids.filter(v => v.title.toLowerCase().includes(query.toLowerCase()));
+    }
+
+    function renderGrid() {
+      const list = filteredVideos();
+      const totalPages = Math.ceil(list.length / PER_PAGE) || 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+      const start = (currentPage - 1) * PER_PAGE;
+      const slice = list.slice(start, start + PER_PAGE);
+
+      grid.innerHTML = '';
+      if (!slice.length) {
+        grid.innerHTML = `<p style="text-align:center;color:#9ca3af">Belum ada video.</p>`;
+        return;
+      }
+
+      slice.forEach(v => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class='thumb' style='background-image:url(${v.thumbnail})'></div>
+          <div class='overlay'>${getViews(v.id)}<small>views</small></div>
+          <div class='meta'><h3 class='title'>${v.title}</h3></div>`;
+        card.querySelector('.thumb').onclick = () => openPlayer(v);
+        grid.appendChild(card);
+      });
+
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === totalPages;
+      pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
+    }
+
+    function openPlayer(v) {
+      const views = incrementViews(v.id);
+      playerTitle.textContent = v.title;
+      playerViews.textContent = `Ditonton: ${views} kali`;
+
+      if (v.url.endsWith('.mp4')) {
+        playerContent.innerHTML = `<video controls autoplay src="${v.url}"></video>`;
+      } else {
+        playerContent.innerHTML = `<iframe src="${v.url}" frameborder="0" allowfullscreen></iframe>`;
+      }
+
+      modal.style.display = 'flex';
+      renderGrid();
+    }
+
+    closeBtn.onclick = () => { modal.style.display = 'none'; playerContent.innerHTML = ''; };
+    modal.onclick = e => { if (e.target === modal) closeBtn.onclick(); };
+    recommendBtn.onclick = () => {
+      const vids = getVideos();
+      if (!vids.length) return alert("Belum ada video!");
+      const random = vids[Math.floor(Math.random() * vids.length)];
+      openPlayer(random);
+    };
+    prevBtn.onclick = () => { currentPage--; renderGrid(); };
+    nextBtn.onclick = () => { currentPage++; renderGrid(); };
+    searchInput.oninput = e => { query = e.target.value; currentPage = 1; renderGrid(); };
+    homeTitle.onclick = () => { location.href = 'index.html'; };
+
+    // 🔹 Jalankan sistem
+    incrementVisitorsToday();
+    updateVisitorsDisplay();
+    renderGrid();
+    autoResetVisitorsMidnight();
+  </script>
+</body>
+</html>
