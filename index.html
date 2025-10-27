@@ -1,422 +1,287 @@
 <!doctype html>
 <html lang="id">
 <head>
-<script type='text/javascript' src='//pl27935857.effectivegatecpm.com/d1/90/e5/d190e5b5debc118111e16ca7b4b380e3.js'></script>
-  <!-- 🔹 Informasi dasar & pengaturan responsif -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Arsip Pemersatu Bangsa</title>
-
-  <!-- 🔹 Style dark minimalist + overlay views transparan -->
   <style>
-    :root {
-      --gap: 16px;
-      --card-radius: 10px;
+    /* === GAYA UMUM TAMPILAN === */
+    body {
+      margin: 0;
+      background: #0b0b0b; /* Warna background hitam elegan */
+      color: #f0f0f0;
       font-family: Inter, system-ui, sans-serif;
     }
 
-    body {
-      margin: 0;
-      background: #0f0f0f;
-      color: #f1f1f1;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
+    /* === PENGATURAN KONTAINER UTAMA === */
     .container {
-      flex: 1;
       max-width: 1100px;
       margin: 24px auto;
       padding: 0 16px;
     }
 
-    /* 🔹 Header */
+    /* === HEADER DAN KOMPONENNYA === */
     header {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
     }
-
     h1 {
       font-size: 22px;
       margin: 0;
-      color: #ffffff;
       cursor: pointer;
+      color: #38bdf8;
     }
-
-    h1:hover { color: #3b82f6; transition: .2s; }
-
-    .actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
     input[type="search"] {
       padding: 10px 12px;
       border-radius: 8px;
-      border: 1px solid #2a2a2a;
-      background: #1a1a1a;
-      color: inherit;
-      min-width: 220px;
+      border: 1px solid #222;
+      background: #111;
+      color: #f0f0f0;
     }
-
     button {
-      padding: 10px 14px;
+      padding: 10px 12px;
       border-radius: 8px;
-      border: 0;
-      background: #2563eb;
-      color: #fff;
+      border: none;
       cursor: pointer;
+      background: #2563eb;
+      color: white;
     }
 
-    button:hover { background: #1e40af; }
-
-    /* 🔹 Teks pengunjung kecil */
-    .visitors-inline {
-      color: #cbd5e1;
-      font-size: 13px;
-      margin-left: 8px;
-    }
-
-    /* 🔹 Grid video */
+    /* === TATA LETAK GRID UNTUK THUMBNAIL VIDEO === */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: var(--gap);
+      gap: 16px;
     }
-
     .card {
-      background: #181818;
-      border-radius: var(--card-radius);
+      background: #111;
+      border-radius: 10px;
       overflow: hidden;
       position: relative;
-      transition: transform .2s;
-      cursor: pointer;
     }
-
-    .card:hover { transform: scale(1.03); }
-
     .thumb {
       width: 100%;
       height: 0;
-      padding-bottom: 56.25%;
+      padding-bottom: 56.25%; /* Rasio 16:9 */
       background-size: cover;
       background-position: center;
-    }
-
-    .meta { padding: 10px; }
-
-    .title {
-      font-size: 14px;
-      margin: 0 0 6px 0;
-      color: #fff;
-    }
-
-    /* 🔹 Overlay views besar semi-transparan */
-    .overlay {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: rgba(0, 0, 0, 0.45);
-      padding: 6px 10px;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 600;
-      color: #ffffff;
-      opacity: 0.95;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-    }
-
-    .overlay small {
-      display:block;
-      font-size:11px;
-      color:#cbd5e1;
-      font-weight:400;
-    }
-
-    /* 🔹 Pagination */
-    .pagination {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      align-items: center;
-      margin: 20px 0;
-      flex-wrap: wrap;
-    }
-
-    .btn-page {
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 0;
-      background: #1a1a1a;
-      color: #ddd;
       cursor: pointer;
     }
+    .meta {
+      padding: 10px;
+    }
+    .title {
+      font-size: 14px;
+      margin: 0;
+    }
 
-    .btn-page:hover { background: #333; }
-    .btn-page[disabled] { opacity: .4; cursor:not-allowed; }
+    /* === OVERLAY JUMLAH VIEW === */
+    .overlay {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 16px;
+      color: #00eaff;
+      font-weight: bold;
+    }
 
-    /* 🔹 Modal player */
-    .modal {
+    /* === BAGIAN FOOTER === */
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      color: #aaa;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* === INFO STATISTIK (PENGUNJUNG & VIEW) === */
+    #stats {
+      margin-top: 10px;
+      color: #9ca3af;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    /* === MODAL PEMUTAR VIDEO === */
+    #modal {
+      display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.8);
-      display: flex;
+      background: rgba(0, 0, 0, 0.8);
       align-items: center;
       justify-content: center;
       padding: 20px;
       z-index: 50;
     }
-
     .player {
-      background: #181818;
+      background: #111;
       padding: 16px;
       border-radius: 10px;
       max-width: 900px;
       width: 100%;
     }
-
-    .player iframe, .player video {
+    .player video,
+    .player iframe {
       width: 100%;
       border-radius: 8px;
       background: black;
     }
-
     .player h2 {
       margin: 8px 0 0 0;
       font-size: 16px;
     }
-
-    .close {
-      background: #ef4444;
-      border: 0;
-      padding: 8px 10px;
-      border-radius: 8px;
-      color: white;
-      cursor: pointer;
-    }
-
-    /* 🔹 Footer */
-    footer {
-      text-align: center;
-      font-size: 14px;
-      color: #9ca3af;
-      padding: 20px;
-      border-top: 1px solid #222;
-      background: #111;
-    }
   </style>
 </head>
 <body>
-
-  <!-- 🔹 Kontainer utama -->
   <div class="container">
-
-    <!-- 🔹 Header -->
+    <!-- === HEADER UTAMA === -->
     <header>
-      <h1 id="homeTitle">Arsip Pemersatu Bangsa</h1>
-      <div class="actions">
+      <h1 onclick="location.reload()">Arsip Pemersatu Bangsa</h1>
+      <div style="display:flex;gap:10px;align-items:center;">
         <input id="search" type="search" placeholder="Cari video..." />
-        <button id="recommendBtn">Rekomendasi</button>
-        <div class="visitors-inline" id="visitorsHeader">Pengunjung hari ini: 0 (WIB)</div>
+        <button id="rekom">Rekomendasi</button>
       </div>
     </header>
 
-    <!-- 🔹 Daftar video -->
+    <!-- === KONTEN UTAMA (DAFTAR VIDEO) === -->
     <main>
       <div id="grid" class="grid"></div>
-      <div class="pagination">
-        <button id="prev" class="btn-page">Prev</button>
-        <span id="page-info"></span>
-        <button id="next" class="btn-page">Next</button>
-      </div>
+      <div id="stats"></div>
     </main>
+
+    <!-- === FOOTER DESKRIPSI SITUS === -->
+    <footer>
+      KingBokep - Situs bokep terbaru dan terlengkap. Streaming dan download video bokep, video mesum, bokep viral dengan kualitas HD gratis. Update terbaru setiap hari.<br>
+      Video Bokep Indo HD Terbaru<br>
+      Nonton & Download Gratis<br>
+      Koleksi Terlengkap Update Harian<br>
+      Video Viral Indonesia<br>
+      Streaming Lancar Tanpa Buffering<br>
+      Semua Video Kualitas HD<br>
+      Bokep Indo Terpanas<br><br>
+      © 2025 Arsip Pemersatu Bangsa All rights reserved
+    </footer>
   </div>
 
-  <!-- 🔹 Modal player -->
-  <div id="modal" class="modal" style="display:none">
+  <!-- === MODAL PEMUTAR VIDEO === -->
+  <div id="modal">
     <div class="player">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <h2 id="player-title"></h2>
-        <button id="close" class="close">Tutup</button>
+        <h2 id="playerTitle"></h2>
+        <button onclick="closePlayer()">Tutup</button>
       </div>
-      <div id="player-content"></div>
-      <p id="player-views" style="margin-top:8px;color:#9ca3af;font-size:13px"></p>
+      <div id="playerBox" style="margin-top:10px"></div>
+      <p id="playerViews" style="margin-top:8px;color:#9fb0cc;font-size:13px"></p>
     </div>
   </div>
 
-  <!-- 🔹 Footer -->
-  <footer>
-    <div id="visitorsFooter">Pengunjung hari ini: 0 (WIB)</div>
-    <p style="margin-top:10px;"><strong>Arsip Pemersatu Bangsa</strong> — Platform streaming video nasional. Arsip pemersatu bangsa- Situs bokep terbaru dan terlengkap. Streaming dan
-download video bokep, video mesum, bokep viral dengan kualitas
-HD gratis. Update terbaru setiap hari.
-Video Bokep Indo HD Terbaru
-Nonton & Download Gratis
-Koleksi Terlengkap Update Harian
-Video Viral Indonesia
-Streaming Lancar Tanpa Buffering
-Semua Video Kualitas HD
-Bokep Indo Terpanas
-100% Gratis Tanpa Iklan.</p>
-    <p style="margin-top:6px;">© 2025 Arsip Pemersatu Bangsa. All rights reserved.</p>
-  </footer>
-
-  <!-- 🔹 Script utama -->
   <script>
-    const PER_PAGE = 10;
-    const STORAGE_VIDEOS = 'videos';
-    const VISITOR_PREFIX = 'visitors_';
+    /* === KONFIGURASI REPOSITORY GITHUB === */
+    const GITHUB_USER = "Fionks";
+    const REPO = "Website-xxx";
+    const BRANCH = "main";
+    const RAW = `https://raw.githubusercontent.com/${GITHUB_USER}/${REPO}/${BRANCH}`;
 
-    function getJakartaDateString() {
-      const now = new Date();
-      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-      const jakarta = new Date(utc + (7 * 60 * 60000));
-      const yyyy = jakarta.getFullYear();
-      const mm = String(jakarta.getMonth() + 1).padStart(2, '0');
-      const dd = String(jakarta.getDate()).padStart(2, '0');
-      return `${yyyy}-${mm}-${dd}`;
+    /* === VARIABEL DOM UTAMA === */
+    const grid = document.getElementById("grid");
+    const search = document.getElementById("search");
+    const statsBox = document.getElementById("stats");
+
+    let videos = [];
+    let stats = {};
+
+    /* === FUNGSI MEMUAT DATA JSON DARI GITHUB === */
+    async function loadJSON(url) {
+      const res = await fetch(url + "?_=" + Date.now());
+      if (!res.ok) throw new Error(res.status);
+      return res.json();
     }
 
-    function getVisitorsKeyForToday() {
-      return VISITOR_PREFIX + getJakartaDateString();
-    }
-
-    function getVisitorsToday() {
-      const key = getVisitorsKeyForToday();
-      return parseInt(localStorage.getItem(key) || '0', 10);
-    }
-
-    function incrementVisitorsToday() {
-      const key = getVisitorsKeyForToday();
-      const val = getVisitorsToday() + 1;
-      localStorage.setItem(key, String(val));
-      return val;
-    }
-
-    function updateVisitorsDisplay() {
-      const v = getVisitorsToday();
-      const label = `Pengunjung hari ini: ${v} (WIB)`;
-      document.getElementById('visitorsHeader').textContent = label;
-      document.getElementById('visitorsFooter').textContent = label;
-    }
-
-    // 🔹 Reset otomatis setiap 00:00 WIB
-    function autoResetVisitorsMidnight() {
-      let lastKey = getVisitorsKeyForToday();
-      setInterval(() => {
-        const nowKey = getVisitorsKeyForToday();
-        if (nowKey !== lastKey) {
-          if (!localStorage.getItem(nowKey)) localStorage.setItem(nowKey, '0');
-          lastKey = nowKey;
-          updateVisitorsDisplay();
-        }
-      }, 60000);
-    }
-
-    const grid = document.getElementById('grid');
-    const prevBtn = document.getElementById('prev');
-    const nextBtn = document.getElementById('next');
-    const pageInfo = document.getElementById('page-info');
-    const searchInput = document.getElementById('search');
-    const homeTitle = document.getElementById('homeTitle');
-    const recommendBtn = document.getElementById('recommendBtn');
-    const modal = document.getElementById('modal');
-    const playerContent = document.getElementById('player-content');
-    const playerTitle = document.getElementById('player-title');
-    const playerViews = document.getElementById('player-views');
-    const closeBtn = document.getElementById('close');
-
-    function getVideos() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_VIDEOS) || '[]'); }
-      catch { return []; }
-    }
-
-    function getViewsKey(id) { return `views_${id}`; }
-    function getViews(id) { return parseInt(localStorage.getItem(getViewsKey(id)) || '0', 10); }
-    function incrementViews(id) {
-      const v = getViews(id) + 1;
-      localStorage.setItem(getViewsKey(id), String(v));
-      return v;
-    }
-
-    let currentPage = 1;
-    let query = '';
-
-    function filteredVideos() {
-      const vids = getVideos().slice().sort((a,b)=>b.timestamp - a.timestamp);
-      if (!query) return vids;
-      return vids.filter(v => v.title.toLowerCase().includes(query.toLowerCase()));
-    }
-
-    function renderGrid() {
-      const list = filteredVideos();
-      const totalPages = Math.ceil(list.length / PER_PAGE) || 1;
-      if (currentPage > totalPages) currentPage = totalPages;
-      const start = (currentPage - 1) * PER_PAGE;
-      const slice = list.slice(start, start + PER_PAGE);
-
-      grid.innerHTML = '';
-      if (!slice.length) {
-        grid.innerHTML = `<p style="text-align:center;color:#9ca3af">Belum ada video.</p>`;
-        return;
+    /* === FUNGSI MEMUAT SEMUA DATA (VIDEO + STATISTIK) === */
+    async function loadData() {
+      try {
+        const [v, s] = await Promise.all([
+          loadJSON(`${RAW}/videos.json`),
+          loadJSON(`${RAW}/stats.json`)
+        ]);
+        videos = v;
+        stats = s;
+        renderGrid(videos);
+        renderStats();
+      } catch (err) {
+        console.error("Gagal memuat data:", err);
+        grid.innerHTML = "<p style='color:#888'>Gagal memuat data dari GitHub.</p>";
       }
+    }
 
-      slice.forEach(v => {
-        const card = document.createElement('div');
-        card.className = 'card';
+    /* === FUNGSI MENAMPILKAN SEMUA VIDEO DALAM GRID === */
+    function renderGrid(list) {
+      grid.innerHTML = "";
+      list.forEach(v => {
+        const card = document.createElement("div");
+        card.className = "card";
         card.innerHTML = `
-          <div class='thumb' style='background-image:url(${v.thumbnail})'></div>
-          <div class='overlay'>${getViews(v.id)}<small>views</small></div>
-          <div class='meta'><h3 class='title'>${v.title}</h3></div>`;
-        card.querySelector('.thumb').onclick = () => openPlayer(v);
+          <div class="thumb" style="background-image:url('${v.thumbnail}')"></div>
+          <div class="overlay">${v.views}x</div>
+          <div class="meta"><h3 class="title">${v.title}</h3></div>
+        `;
+        card.querySelector(".thumb").onclick = () => openPlayer(v);
         grid.appendChild(card);
       });
-
-      prevBtn.disabled = currentPage === 1;
-      nextBtn.disabled = currentPage === totalPages;
-      pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
     }
 
-    function openPlayer(v) {
-      const views = incrementViews(v.id);
-      playerTitle.textContent = v.title;
-      playerViews.textContent = `Ditonton: ${views} kali`;
+    /* === FUNGSI MENAMPILKAN STATISTIK SITUS === */
+    function renderStats() {
+      const today = stats.todayVisitors || 0;
+      const totalV = stats.totalVisitors || 0;
+      const totalViews = stats.totalViews || 0;
+      statsBox.innerHTML = `👁️ Pengunjung hari ini: <b>${today}</b> | Total pengunjung: <b>${totalV}</b> | Total views: <b>${totalViews}</b>`;
+    }
 
-      if (v.url.endsWith('.mp4')) {
-        playerContent.innerHTML = `<video controls autoplay src="${v.url}"></video>`;
+    /* === FUNGSI PEMUTAR VIDEO === */
+    function openPlayer(v) {
+      document.getElementById("playerTitle").textContent = v.title;
+      document.getElementById("playerViews").textContent = `Ditonton ${v.views} kali`;
+      const box = document.getElementById("playerBox");
+
+      // Jika URL berupa file video langsung (.mp4/.webm)
+      if (v.url.includes(".mp4") || v.url.includes(".webm")) {
+        box.innerHTML = `<video src="${v.url}" controls autoplay></video>`;
       } else {
-        playerContent.innerHTML = `<iframe src="${v.url}" frameborder="0" allowfullscreen></iframe>`;
+        // Jika URL berupa link embed (iframe)
+        box.innerHTML = `<iframe src="${v.url}" frameborder="0" allowfullscreen></iframe>`;
       }
 
-      modal.style.display = 'flex';
-      renderGrid();
+      document.getElementById("modal").style.display = "flex";
     }
 
-    closeBtn.onclick = () => { modal.style.display = 'none'; playerContent.innerHTML = ''; };
-    modal.onclick = e => { if (e.target === modal) closeBtn.onclick(); };
-    recommendBtn.onclick = () => {
-      const vids = getVideos();
-      if (!vids.length) return alert("Belum ada video!");
-      const random = vids[Math.floor(Math.random() * vids.length)];
-      openPlayer(random);
-    };
-    prevBtn.onclick = () => { currentPage--; renderGrid(); };
-    nextBtn.onclick = () => { currentPage++; renderGrid(); };
-    searchInput.oninput = e => { query = e.target.value; currentPage = 1; renderGrid(); };
-    homeTitle.onclick = () => { location.href = 'index.html'; };
+    /* === FUNGSI MENUTUP PEMUTAR VIDEO === */
+    function closePlayer() {
+      document.getElementById("modal").style.display = "none";
+      document.getElementById("playerBox").innerHTML = "";
+    }
 
-    // 🔹 Jalankan sistem
-    incrementVisitorsToday();
-    updateVisitorsDisplay();
-    renderGrid();
-    autoResetVisitorsMidnight();
+    /* === FITUR PENCARIAN VIDEO === */
+    search.oninput = e => {
+      const q = e.target.value.toLowerCase();
+      const filtered = videos.filter(v => v.title.toLowerCase().includes(q));
+      renderGrid(filtered);
+    };
+
+    /* === FITUR REKOMENDASI (ACAK 10 VIDEO) === */
+    document.getElementById("rekom").onclick = () => {
+      const random = [...videos].sort(() => 0.5 - Math.random()).slice(0, 10);
+      renderGrid(random);
+    };
+
+    /* === MEMUAT DATA SAAT PERTAMA KALI === */
+    loadData();
   </script>
 </body>
 </html>
-
