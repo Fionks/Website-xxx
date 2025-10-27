@@ -69,7 +69,7 @@
 <body>
   <div class="container">
 
-    <!-- === BAGIAN LOGIN ADMIN === -->
+    <!-- === LOGIN ADMIN === -->
     <div id="loginSection">
       <h2>Login Admin</h2>
       <input type="password" id="passwordInput" placeholder="Masukkan password admin..." />
@@ -82,6 +82,7 @@
         <h1>Panel Admin - Arsip Pemersatu Bangsa</h1>
         <div class="flex">
           <button id="toIndex">Lihat Website</button>
+          <button id="changeToken">Ganti Token</button>
           <button id="logout" class="logout">Logout</button>
         </div>
       </div>
@@ -98,21 +99,21 @@
 
       <hr style="margin:20px 0;border:0;border-top:1px solid #333">
 
-      <!-- === BAGIAN PENCARIAN VIDEO === -->
+      <!-- === DAFTAR VIDEO === -->
       <h3>Daftar Video</h3>
       <input type="search" id="searchVideo" placeholder="Cari berdasarkan judul...">
       <div id="videoList" class="grid"></div>
 
       <hr style="margin:20px 0;border:0;border-top:1px solid #333">
 
-      <!-- === BAGIAN STATISTIK === -->
+      <!-- === STATISTIK === -->
       <h3>Statistik Situs</h3>
       <div id="stats"></div>
       <button id="editStats">Edit Statistik</button>
 
       <hr style="margin:20px 0;border:0;border-top:1px solid #333">
 
-      <!-- === BAGIAN GANTI PASSWORD === -->
+      <!-- === GANTI PASSWORD === -->
       <h3>Ganti Password Admin</h3>
       <input type="password" id="newPassword" placeholder="Password baru">
       <button id="savePassword">Ubah Password</button>
@@ -121,46 +122,48 @@
   </div>
 
   <script>
-    // === KONFIGURASI REPOSITORY GITHUB ===
+    /* === KONFIGURASI === */
     const GITHUB_USER = "Fionks";
     const REPO = "Website-xxx";
     const BRANCH = "main";
+    const SITE_URL = "https://arsippemersatubangsa.netlify.app/";
 
     const RAW = `https://raw.githubusercontent.com/${GITHUB_USER}/${REPO}/${BRANCH}`;
     const API = `https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents`;
 
+    /* === VARIABEL GLOBAL === */
     let videos = [];
     let stats = {};
     let adminPass = "";
+    let githubToken = sessionStorage.getItem("githubToken") || null;
 
-    // === ELEMEN DOM ===
+    /* === DOM ELEMENTS === */
     const loginSection = document.getElementById("loginSection");
     const adminPanel = document.getElementById("adminPanel");
     const passwordInput = document.getElementById("passwordInput");
     const loginBtn = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logout");
     const toIndexBtn = document.getElementById("toIndex");
+    const changeTokenBtn = document.getElementById("changeToken");
     const videoList = document.getElementById("videoList");
     const searchVideo = document.getElementById("searchVideo");
     const saveVideoBtn = document.getElementById("saveVideo");
 
-    // === FUNGSI: LOAD JSON DARI GITHUB ===
+    /* === FUNGSI UMUM === */
     async function loadJSON(path) {
       const res = await fetch(`${RAW}/${path}?_=${Date.now()}`);
       if (!res.ok) throw new Error(res.status);
       return res.json();
     }
 
-    // === FUNGSI: DEKODE BASE64 (DARI GITHUB API) ===
     function decodeBase64(str) {
       try {
         return decodeURIComponent(escape(atob(str)));
-      } catch (e) {
+      } catch {
         return atob(str);
       }
     }
 
-    // === FUNGSI: MENGAMBIL DATA JSON + SHA ===
     async function getGitHubFile(file) {
       const res = await fetch(`${API}/${file}?ref=${BRANCH}`);
       const data = await res.json();
@@ -168,31 +171,29 @@
       return { json: JSON.parse(content), sha: data.sha };
     }
 
-    // === FUNGSI: SIMPAN FILE KE GITHUB ===
-    async function saveToGitHub(file, json, sha, token, msg) {
+    async function saveToGitHub(file, json, sha, msg) {
+      if (!githubToken) {
+        githubToken = prompt("Masukkan GitHub Token kamu:");
+        sessionStorage.setItem("githubToken", githubToken);
+      }
       const content = btoa(unescape(encodeURIComponent(JSON.stringify(json, null, 2))));
       const res = await fetch(`${API}/${file}`, {
         method: "PUT",
         headers: {
-          "Authorization": `token ${token}`,
+          "Authorization": `token ${githubToken}`,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          message: msg,
-          content,
-          sha,
-          branch: BRANCH
-        })
+        body: JSON.stringify({ message: msg, content, sha, branch: BRANCH })
       });
+      if (!res.ok) throw new Error("Gagal menyimpan ke GitHub");
       return res.json();
     }
 
-    // === LOGIN ADMIN ===
+    /* === LOGIN === */
     async function checkLogin() {
       const data = await loadJSON("admin.json");
       adminPass = data.password;
-      const input = passwordInput.value.trim();
-      if (input === adminPass) {
+      if (passwordInput.value.trim() === adminPass) {
         loginSection.style.display = "none";
         adminPanel.style.display = "block";
         loadAllData();
@@ -201,18 +202,22 @@
       }
     }
     loginBtn.onclick = checkLogin;
+    logoutBtn.onclick = () => location.reload();
 
-    // === LOGOUT ===
-    logoutBtn.onclick = () => {
-      adminPanel.style.display = "none";
-      loginSection.style.display = "block";
-      passwordInput.value = "";
+    /* === NAVIGASI WEBSITE === */
+    toIndexBtn.onclick = () => window.open(SITE_URL, "_blank");
+
+    /* === GANTI TOKEN === */
+    changeTokenBtn.onclick = () => {
+      const t = prompt("Masukkan GitHub Token baru:");
+      if (t) {
+        sessionStorage.setItem("githubToken", t);
+        githubToken = t;
+        alert("Token berhasil diperbarui!");
+      }
     };
 
-    // === KE HALAMAN INDEX ===
-    toIndexBtn.onclick = () => window.open(`https://${GITHUB_USER}.github.io/${REPO}/`, "_blank");
-
-    // === LOAD SEMUA DATA ===
+    /* === MUAT SEMUA DATA === */
     async function loadAllData() {
       const [vid, stat] = await Promise.all([
         loadJSON("videos.json"),
@@ -224,7 +229,7 @@
       renderStats();
     }
 
-    // === RENDER VIDEO LIST ===
+    /* === DAFTAR VIDEO === */
     function renderVideoList(list = videos) {
       videoList.innerHTML = "";
       list.forEach((v, i) => {
@@ -241,7 +246,7 @@
       });
     }
 
-    // === TAMBAH / EDIT VIDEO ===
+    /* === EDIT / HAPUS VIDEO === */
     let editIndex = null;
     function editVideo(i) {
       const v = videos[i];
@@ -253,46 +258,45 @@
     }
 
     async function deleteVideo(i) {
-      if (!confirm("Yakin ingin menghapus video ini?")) return;
+      if (!confirm("Yakin ingin hapus video ini?")) return;
       videos.splice(i, 1);
-      await saveDataToGitHub("videos.json", videos, "Hapus video");
+      await saveData("videos.json", videos, "Hapus video");
       renderVideoList();
     }
 
+    /* === TAMBAH / SIMPAN VIDEO === */
     saveVideoBtn.onclick = async () => {
       const t = document.getElementById("title").value.trim();
       const u = document.getElementById("url").value.trim();
       const th = document.getElementById("thumbnail").value.trim();
       const v = parseInt(document.getElementById("views").value) || 0;
-
       if (!t || !u || !th) return alert("Lengkapi semua kolom!");
-      const obj = { title: t, url: u, thumbnail: th, views: v };
 
+      const obj = { title: t, url: u, thumbnail: th, views: v };
       if (editIndex !== null) {
         videos[editIndex] = obj;
         editIndex = null;
       } else {
         videos.unshift(obj);
       }
-      await saveDataToGitHub("videos.json", videos, "Update daftar video");
+      await saveData("videos.json", videos, "Update daftar video");
       renderVideoList();
-      alert("Video disimpan!");
+      alert("Video berhasil disimpan!");
     };
 
-    // === SIMPAN DATA KE GITHUB ===
-    async function saveDataToGitHub(file, data, message) {
-      const token = prompt("Masukkan GitHub token kamu:");
+    /* === SIMPAN DATA === */
+    async function saveData(file, data, message) {
       const { sha } = await getGitHubFile(file);
-      await saveToGitHub(file, data, sha, token, message);
+      await saveToGitHub(file, data, sha, message);
     }
 
-    // === PENCARIAN VIDEO ===
+    /* === PENCARIAN VIDEO === */
     searchVideo.oninput = e => {
       const q = e.target.value.toLowerCase();
       renderVideoList(videos.filter(v => v.title.toLowerCase().includes(q)));
     };
 
-    // === STATISTIK ===
+    /* === STATISTIK === */
     function renderStats() {
       document.getElementById("stats").innerHTML = `
         Total Pengunjung: ${stats.totalVisitors}<br>
@@ -305,17 +309,16 @@
       stats.totalVisitors = parseInt(prompt("Total pengunjung:", stats.totalVisitors)) || stats.totalVisitors;
       stats.todayVisitors = parseInt(prompt("Pengunjung hari ini:", stats.todayVisitors)) || stats.todayVisitors;
       stats.totalViews = parseInt(prompt("Total views:", stats.totalViews)) || stats.totalViews;
-      await saveDataToGitHub("stats.json", stats, "Edit statistik");
+      await saveData("stats.json", stats, "Edit statistik");
       renderStats();
     };
 
-    // === GANTI PASSWORD ===
+    /* === GANTI PASSWORD === */
     document.getElementById("savePassword").onclick = async () => {
       const newPass = document.getElementById("newPassword").value.trim();
       if (!newPass) return alert("Masukkan password baru!");
-      const token = prompt("Masukkan GitHub token kamu:");
       const { sha } = await getGitHubFile("admin.json");
-      await saveToGitHub("admin.json", { password: newPass }, sha, token, "Ganti password admin");
+      await saveToGitHub("admin.json", { password: newPass }, sha, "Ganti password admin");
       alert("Password berhasil diubah!");
     };
   </script>
