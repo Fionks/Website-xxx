@@ -3,380 +3,228 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin - Arsip Pemersatu Bangsa</title>
+  <title>Arsip Pemersatu Bangsa</title>
   <style>
-    /* === GAYA DASAR === */
+    /* === GAYA UMUM === */
     body {
       margin: 0;
       background: #0b0b0b;
       color: #f0f0f0;
       font-family: Inter, system-ui, sans-serif;
     }
+
     .container {
       max-width: 1100px;
       margin: 24px auto;
       padding: 0 16px;
     }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 6px 0;
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin: 0;
+      cursor: pointer;
+      color: #38bdf8;
+    }
+
+    input[type="search"] {
+      padding: 10px 12px;
       border-radius: 8px;
       border: 1px solid #222;
       background: #111;
       color: #f0f0f0;
     }
+
     button {
-      padding: 10px 14px;
+      padding: 10px 12px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
       background: #2563eb;
       color: white;
     }
+
+    /* === GRID VIDEO === */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 16px;
-      margin-top: 20px;
     }
+
     .card {
       background: #111;
-      padding: 10px;
-      border-radius: 8px;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.2s ease;
     }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
     .thumb {
       width: 100%;
-      height: 140px;
+      height: 0;
+      padding-bottom: 56.25%;
       background-size: cover;
       background-position: center;
-      border-radius: 6px;
-      margin-bottom: 8px;
     }
-    .flex {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+
+    .meta {
+      padding: 10px;
     }
+
     .title {
-      color: #38bdf8;
-      margin-bottom: 5px;
-    }
-    .logout {
-      background: #ef4444;
+      font-size: 14px;
+      margin: 0;
     }
 
-    /* === PROGRESS BAR ATAS === */
-    #progressBar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 4px;
-      width: 0%;
-      background: linear-gradient(to right, #3b82f6, #60a5fa);
-      transition: width 0.3s ease;
-      z-index: 9999;
+    .overlay {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 16px;
+      color: #00eaff;
+      font-weight: bold;
     }
 
-    #updateStatus {
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      color: #aaa;
       font-size: 13px;
-      color: #9effa8;
+      line-height: 1.6;
+    }
+
+    #stats {
       margin-top: 10px;
+      color: #9ca3af;
+      font-size: 14px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <!-- === PROGRESS BAR === -->
-  <div id="progressBar"></div>
-
   <div class="container">
-
-    <!-- === LOGIN ADMIN === -->
-    <div id="loginSection">
-      <h2>Login Admin</h2>
-      <input type="password" id="passwordInput" placeholder="Masukkan password admin..." />
-      <button id="loginBtn">Login</button>
-    </div>
-
-    <!-- === DASHBOARD ADMIN === -->
-    <div id="adminPanel" style="display:none">
-      <div class="flex" style="justify-content:space-between;align-items:center;">
-        <h1>Panel Admin - Arsip Pemersatu Bangsa</h1>
-        <div class="flex">
-          <button id="toIndex">Lihat Website</button>
-          <button id="changeToken">Ganti Token</button>
-          <button id="logout" class="logout">Logout</button>
-        </div>
+    <!-- === HEADER === -->
+    <header>
+      <h1 onclick="location.reload()">Arsip Pemersatu Bangsa</h1>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <input id="search" type="search" placeholder="Cari video..." />
+        <button id="rekom">Rekomendasi</button>
       </div>
+    </header>
 
-      <!-- STATUS UPDATE GITHUB -->
-      <p id="updateStatus">Status: Menunggu tindakan...</p>
-
-      <hr style="margin:20px 0;border:0;border-top:1px solid #333">
-
-      <!-- === FORM TAMBAH / EDIT VIDEO === -->
-      <h3>Tambah / Edit Video</h3>
-      <input type="text" id="title" placeholder="Judul video">
-      <input type="text" id="url" placeholder="Link video (mp4 / embed)">
-      <input type="text" id="thumbnail" placeholder="Link thumbnail">
-      <input type="number" id="views" placeholder="Jumlah views (opsional)">
-      <button id="saveVideo">Simpan Video</button>
-
-      <hr style="margin:20px 0;border:0;border-top:1px solid #333">
-
-      <!-- === DAFTAR VIDEO === -->
-      <h3>Daftar Video</h3>
-      <input type="search" id="searchVideo" placeholder="Cari berdasarkan judul...">
-      <div id="videoList" class="grid"></div>
-
-      <hr style="margin:20px 0;border:0;border-top:1px solid #333">
-
-      <!-- === STATISTIK === -->
-      <h3>Statistik Situs</h3>
+    <!-- === GRID VIDEO === -->
+    <main>
+      <div id="grid" class="grid"></div>
       <div id="stats"></div>
-      <button id="editStats">Edit Statistik</button>
+    </main>
 
-      <hr style="margin:20px 0;border:0;border-top:1px solid #333">
-
-      <!-- === GANTI PASSWORD === -->
-      <h3>Ganti Password Admin</h3>
-      <input type="password" id="newPassword" placeholder="Password baru">
-      <button id="savePassword">Ubah Password</button>
-    </div>
-
+    <!-- === FOOTER === -->
+    <footer>
+      KingBokep - Situs bokep terbaru dan terlengkap. Streaming dan download video bokep, video mesum, bokep viral dengan kualitas HD gratis. Update terbaru setiap hari.<br>
+      Video Bokep Indo HD Terbaru<br>
+      Nonton & Download Gratis<br>
+      Koleksi Terlengkap Update Harian<br>
+      Video Viral Indonesia<br>
+      Streaming Lancar Tanpa Buffering<br>
+      Semua Video Kualitas HD<br>
+      Bokep Indo Terpanas<br><br>
+      © 2025 Arsip Pemersatu Bangsa All rights reserved
+    </footer>
   </div>
 
   <script>
-    /* === KONFIGURASI DASAR === */
+    /* === KONFIGURASI REPO GITHUB === */
     const GITHUB_USER = "Fionks";
     const REPO = "Website-xxx";
     const BRANCH = "main";
-    const SITE_URL = "https://arsippemersatubangsa.netlify.app/";
-
     const RAW = `https://raw.githubusercontent.com/${GITHUB_USER}/${REPO}/${BRANCH}`;
-    const API = `https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents`;
+
+    /* === DOM ELEMENT === */
+    const grid = document.getElementById("grid");
+    const search = document.getElementById("search");
+    const statsBox = document.getElementById("stats");
 
     let videos = [];
     let stats = {};
-    let adminPass = "";
-    let githubToken = sessionStorage.getItem("githubToken") || null;
 
-    /* === ELEMENT DOM === */
-    const progressBar = document.getElementById("progressBar");
-    const loginSection = document.getElementById("loginSection");
-    const adminPanel = document.getElementById("adminPanel");
-    const passwordInput = document.getElementById("passwordInput");
-    const loginBtn = document.getElementById("loginBtn");
-    const logoutBtn = document.getElementById("logout");
-    const toIndexBtn = document.getElementById("toIndex");
-    const changeTokenBtn = document.getElementById("changeToken");
-    const videoList = document.getElementById("videoList");
-    const searchVideo = document.getElementById("searchVideo");
-    const saveVideoBtn = document.getElementById("saveVideo");
-    const statusEl = document.getElementById("updateStatus");
-
-    /* === FUNGSI PROGRESS BAR === */
-    function startProgress() {
-      progressBar.style.width = "0%";
-      progressBar.style.display = "block";
-      setTimeout(() => (progressBar.style.width = "80%"), 100);
-    }
-
-    function completeProgress() {
-      progressBar.style.width = "100%";
-      setTimeout(() => (progressBar.style.display = "none"), 400);
-    }
-
-    /* === FUNGSI DASAR === */
-    async function loadJSON(path) {
-      const res = await fetch(`${RAW}/${path}?_=${Date.now()}`);
+    /* === LOAD JSON === */
+    async function loadJSON(url) {
+      const res = await fetch(url + "?_=" + Date.now());
       if (!res.ok) throw new Error(res.status);
       return res.json();
     }
 
-    function decodeBase64(str) {
-      try {
-        return decodeURIComponent(escape(atob(str)));
-      } catch {
-        return atob(str);
-      }
-    }
-
-    async function getGitHubFile(file) {
-      const res = await fetch(`${API}/${file}?ref=${BRANCH}`);
-      const data = await res.json();
-      const content = decodeBase64(data.content);
-      return { json: JSON.parse(content), sha: data.sha };
-    }
-
-    async function saveToGitHub(file, json, sha, msg) {
-      if (!githubToken) {
-        githubToken = prompt("Masukkan GitHub Token kamu:");
-        sessionStorage.setItem("githubToken", githubToken);
-      }
-      const content = btoa(unescape(encodeURIComponent(JSON.stringify(json, null, 2))));
-      const res = await fetch(`${API}/${file}`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `token ${githubToken}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ message: msg, content, sha, branch: BRANCH })
-      });
-      if (!res.ok) throw new Error("Gagal menyimpan ke GitHub");
-      return res.json();
-    }
-
-    /* === LOGIN ADMIN === */
-    async function checkLogin() {
-      const data = await loadJSON("admin.json");
-      adminPass = data.password;
-      if (passwordInput.value.trim() === adminPass) {
-        loginSection.style.display = "none";
-        adminPanel.style.display = "block";
-        loadAllData();
-      } else {
-        alert("Password salah!");
-      }
-    }
-    loginBtn.onclick = checkLogin;
-
-    logoutBtn.onclick = () => {
-      sessionStorage.removeItem("githubToken");
-      location.reload();
-    };
-
-    toIndexBtn.onclick = () => window.open(SITE_URL, "_blank");
-
-    changeTokenBtn.onclick = () => {
-      const t = prompt("Masukkan GitHub Token baru:");
-      if (t) {
-        sessionStorage.setItem("githubToken", t);
-        githubToken = t;
-        alert("Token berhasil diperbarui!");
-      }
-    };
-
     /* === LOAD DATA === */
-    async function loadAllData() {
-      const [vid, stat] = await Promise.all([
-        loadJSON("videos.json"),
-        loadJSON("stats.json")
-      ]);
-      videos = vid;
-      stats = stat;
-      renderVideoList();
-      renderStats();
+    async function loadData() {
+      try {
+        const [v, s] = await Promise.all([
+          loadJSON(`${RAW}/videos.json`),
+          loadJSON(`${RAW}/stats.json`)
+        ]);
+        videos = v;
+        stats = s;
+        renderGrid(videos);
+        renderStats();
+      } catch (err) {
+        console.error("Gagal memuat data:", err);
+        grid.innerHTML = "<p style='color:#888'>Gagal memuat data dari GitHub.</p>";
+      }
     }
 
-    /* === RENDER VIDEO === */
-    function renderVideoList(list = videos) {
-      videoList.innerHTML = "";
-      list.forEach((v, i) => {
-        const div = document.createElement("div");
-        div.className = "card";
-        div.innerHTML = `
-          <div class="thumb" style="background-image:url('${v.thumbnail}')"></div>
-          <div class="title">${v.title}</div>
-          <div>Views: ${v.views}</div>
-          <button onclick="editVideo(${i})">Edit</button>
-          <button onclick="deleteVideo(${i})" class="logout">Hapus</button>
+    /* === TAMPILKAN GRID === */
+    function renderGrid(list) {
+      grid.innerHTML = "";
+      list.forEach(v => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <a href="${v.url}" target="_blank">
+            <div class="thumb" style="background-image:url('${v.thumbnail}')"></div>
+          </a>
+          <div class="overlay">${v.views}x</div>
+          <div class="meta"><h3 class="title">${v.title}</h3></div>
         `;
-        videoList.appendChild(div);
+        grid.appendChild(card);
       });
-    }
-
-    /* === EDIT VIDEO === */
-    let editIndex = null;
-    function editVideo(i) {
-      const v = videos[i];
-      document.getElementById("title").value = v.title;
-      document.getElementById("url").value = v.url;
-      document.getElementById("thumbnail").value = v.thumbnail;
-      document.getElementById("views").value = v.views;
-      editIndex = i;
-    }
-
-    /* === TAMBAH / SIMPAN VIDEO === */
-    saveVideoBtn.onclick = async () => {
-      const t = document.getElementById("title").value.trim();
-      const u = document.getElementById("url").value.trim();
-      const th = document.getElementById("thumbnail").value.trim();
-      const v = parseInt(document.getElementById("views").value) || 0;
-      if (!t || !u || !th) return alert("Lengkapi semua kolom!");
-
-      const obj = { title: t, url: u, thumbnail: th, views: v };
-      if (editIndex !== null) {
-        videos[editIndex] = obj;
-        editIndex = null;
-      } else {
-        videos.unshift(obj);
-      }
-
-      startProgress();
-      statusEl.textContent = "⏳ Menyimpan ke GitHub...";
-      await saveData("videos.json", videos, "Update daftar video");
-      statusEl.textContent = "⏳ Menunggu update dari GitHub...";
-      await checkRepoUpdate("videos.json");
-      completeProgress();
-    };
-
-    /* === CEK UPDATE GITHUB === */
-    async function checkRepoUpdate(file) {
-      const start = Date.now();
-      for (let i = 0; i < 10; i++) {
-        await new Promise(r => setTimeout(r, 2000));
-        const res = await fetch(`${RAW}/${file}?_=${Date.now()}`);
-        if (res.ok) {
-          const delay = ((Date.now() - start) / 1000).toFixed(1);
-          const now = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
-          statusEl.textContent = `✅ Update muncul di GitHub (${delay}s) — Terakhir diperbarui: ${now}`;
-          statusEl.style.color = "#4ade80";
-          return;
-        }
-      }
-      statusEl.textContent = "⚠️ Update belum terdeteksi (delay GitHub)";
-      statusEl.style.color = "#facc15";
-    }
-
-    async function saveData(file, data, message) {
-      const { sha } = await getGitHubFile(file);
-      await saveToGitHub(file, data, sha, message);
     }
 
     /* === STATISTIK === */
     function renderStats() {
-      document.getElementById("stats").innerHTML = `
-        Total Pengunjung: ${stats.totalVisitors}<br>
-        Pengunjung Hari Ini: ${stats.todayVisitors}<br>
-        Total Views: ${stats.totalViews}
-      `;
+      const today = stats.todayVisitors || 0;
+      const totalV = stats.totalVisitors || 0;
+      const totalViews = stats.totalViews || 0;
+      statsBox.innerHTML = `👁️ Pengunjung hari ini: <b>${today}</b> | Total pengunjung: <b>${totalV}</b> | Total views: <b>${totalViews}</b>`;
     }
 
-    document.getElementById("editStats").onclick = async () => {
-      stats.totalVisitors = parseInt(prompt("Total pengunjung:", stats.totalVisitors)) || stats.totalVisitors;
-      stats.todayVisitors = parseInt(prompt("Pengunjung hari ini:", stats.todayVisitors)) || stats.todayVisitors;
-      stats.totalViews = parseInt(prompt("Total views:", stats.totalViews)) || stats.totalViews;
-      startProgress();
-      statusEl.textContent = "⏳ Menyimpan statistik ke GitHub...";
-      await saveData("stats.json", stats, "Edit statistik");
-      await checkRepoUpdate("stats.json");
-      renderStats();
-      completeProgress();
+    /* === FITUR PENCARIAN === */
+    search.oninput = e => {
+      const q = e.target.value.toLowerCase();
+      const filtered = videos.filter(v => v.title.toLowerCase().includes(q));
+      renderGrid(filtered);
     };
 
-    /* === GANTI PASSWORD === */
-    document.getElementById("savePassword").onclick = async () => {
-      const newPass = document.getElementById("newPassword").value.trim();
-      if (!newPass) return alert("Masukkan password baru!");
-      startProgress();
-      statusEl.textContent = "⏳ Menyimpan password baru ke GitHub...";
-      const { sha } = await getGitHubFile("admin.json");
-      await saveToGitHub("admin.json", { password: newPass }, sha, "Ganti password admin");
-      await checkRepoUpdate("admin.json");
-      completeProgress();
-      alert("Password berhasil diubah!");
+    /* === REKOMENDASI ACAK === */
+    document.getElementById("rekom").onclick = () => {
+      const random = [...videos].sort(() => 0.5 - Math.random()).slice(0, 10);
+      renderGrid(random);
     };
+
+    /* === MULAI === */
+    loadData();
   </script>
 </body>
 </html>
