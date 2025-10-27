@@ -1,470 +1,323 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Admin - Arsip Pemersatu Bangsa</title>
   <style>
-    :root {
-      font-family: Inter, system-ui, sans-serif;
-    }
-
     body {
       margin: 0;
-      background: #0f0f0f;
-      color: #f1f1f1;
+      background: #0b0b0b;
+      color: #f0f0f0;
+      font-family: Inter, system-ui, sans-serif;
     }
-
     .container {
       max-width: 1100px;
       margin: 24px auto;
       padding: 0 16px;
     }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      border-radius: 8px;
+      border: 1px solid #222;
+      background: #111;
+      color: #f0f0f0;
     }
-
-    h1 {
-      font-size: 22px;
-      margin: 0;
-    }
-
-    .home-btn {
-      background: #22c55e;
-      color: white;
+    button {
+      padding: 10px 14px;
+      border-radius: 8px;
       border: none;
-      border-radius: 8px;
-      padding: 8px 14px;
       cursor: pointer;
-    }
-
-    .home-btn:hover { background: #15803d; }
-
-    .form {
-      background: #181818;
-      padding: 16px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-
-    .form input {
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 10px 12px;
-      border-radius: 8px;
-      border: 1px solid #2a2a2a;
-      background: #1a1a1a;
-      color: #f1f1f1;
-    }
-
-    .form button {
-      width: 100%;
-      padding: 10px 12px;
-      border: 0;
-      border-radius: 8px;
       background: #2563eb;
-      color: #fff;
-      cursor: pointer;
+      color: white;
     }
-
-    .form button:hover { background: #1e40af; }
-
-    .controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    input[type="search"] {
-      padding: 10px 12px;
-      border-radius: 8px;
-      border: 1px solid #2a2a2a;
-      background: #1a1a1a;
-      color: inherit;
-      min-width: 240px;
-    }
-
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 16px;
+      margin-top: 20px;
     }
-
     .card {
-      background: #181818;
-      border-radius: 10px;
-      overflow: hidden;
-      padding-bottom: 8px;
+      background: #111;
+      padding: 10px;
+      border-radius: 8px;
     }
-
     .thumb {
       width: 100%;
-      height: 0;
-      padding-bottom: 56.25%;
+      height: 140px;
       background-size: cover;
       background-position: center;
-    }
-
-    .meta {
-      padding: 10px;
-    }
-
-    .meta h3 {
-      font-size: 14px;
-      margin: 0 0 4px;
-    }
-
-    .meta button {
-      margin-right: 6px;
-      padding: 6px 10px;
       border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-size: 13px;
+      margin-bottom: 8px;
     }
-
-    .edit-btn { background: #3b82f6; color: white; }
-    .del-btn { background: #ef4444; color: white; }
-
-    .pagination {
+    .flex {
       display: flex;
-      gap: 8px;
-      justify-content: center;
-      align-items: center;
-      margin: 20px 0;
+      gap: 10px;
       flex-wrap: wrap;
     }
-
-    .btn-page {
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 0;
-      background: #1a1a1a;
-      color: #ddd;
-      cursor: pointer;
+    .title {
+      color: #38bdf8;
+      margin-bottom: 5px;
     }
-
-    .btn-page:hover { background: #333; }
-    .btn-page[disabled] { opacity: .4; cursor: not-allowed; }
-
-    footer {
-      text-align: center;
-      font-size: 14px;
-      color: #9ca3af;
-      padding: 20px;
-      border-top: 1px solid #222;
-      background: #111;
+    .logout {
+      background: #ef4444;
     }
-
-    .login-screen {
-      position: fixed;
-      inset: 0;
-      background: #0f0f0f;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 99;
-    }
-
-    .login-box {
-      background: #181818;
-      padding: 24px;
-      border-radius: 12px;
-      text-align: center;
-      width: 90%;
-      max-width: 320px;
-    }
-
-    .login-box h2 {
-      margin-bottom: 16px;
-    }
-
-    .login-box input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #333;
-      background: #1a1a1a;
-      color: #f1f1f1;
-      margin-bottom: 10px;
-    }
-
-    .login-box button {
-      padding: 10px;
-      width: 100%;
-      border: none;
-      border-radius: 8px;
-      background: #2563eb;
-      color: white;
-      cursor: pointer;
-    }
-
-    .login-box button:hover { background: #1e40af; }
-
-    .change-pass {
-      background: #9333ea;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 14px;
-      cursor: pointer;
-    }
-
-    .change-pass:hover { background: #7e22ce; }
-
   </style>
 </head>
 <body>
-  <div id="login" class="login-screen">
-    <div class="login-box">
-      <h2 id="loginTitle">Login Admin</h2>
-      <input id="passwordInput" type="password" placeholder="Masukkan password admin..." />
-      <button id="loginBtn">Masuk</button>
-    </div>
-  </div>
+  <div class="container">
 
-  <div id="app" style="display:none">
-    <div class="container">
-      <header>
-        <h1>Admin Panel - Arsip Pemersatu Bangsa</h1>
-        <div>
-          <button class="change-pass" id="changePassBtn">Ubah Password</button>
-          <button class="home-btn" id="toHome">Lihat Halaman Utama</button>
-        </div>
-      </header>
-
-      <div class="controls">
-        <div>
-          Pengunjung hari ini (WIB):
-          <input id="visitorCount" type="number" min="0">
-          <button id="saveVisitor">Simpan</button>
-        </div>
-        <div id="totalVideos">Total video: 0</div>
-      </div>
-
-      <section class="form">
-        <h3>Tambah / Edit Video</h3>
-        <input id="title" type="text" placeholder="Judul video..." />
-        <input id="url" type="text" placeholder="Link video..." />
-        <input id="thumbnail" type="text" placeholder="Link thumbnail..." />
-        <input id="views" type="number" placeholder="Jumlah views" min="0" />
-        <button id="saveBtn">Simpan Video</button>
-      </section>
-
-      <div class="controls">
-        <input id="search" type="search" placeholder="Cari video..." />
-      </div>
-
-      <div id="grid" class="grid"></div>
-
-      <div class="pagination">
-        <button id="prev" class="btn-page">Prev</button>
-        <span id="page-info"></span>
-        <button id="next" class="btn-page">Next</button>
-      </div>
+    <!-- === BAGIAN LOGIN ADMIN === -->
+    <div id="loginSection">
+      <h2>Login Admin</h2>
+      <input type="password" id="passwordInput" placeholder="Masukkan password admin..." />
+      <button id="loginBtn">Login</button>
     </div>
 
-    <footer>© 2025 Arsip Pemersatu Bangsa — Panel Admin</footer>
+    <!-- === DASHBOARD ADMIN === -->
+    <div id="adminPanel" style="display:none">
+      <div class="flex" style="justify-content:space-between;align-items:center;">
+        <h1>Panel Admin - Arsip Pemersatu Bangsa</h1>
+        <div class="flex">
+          <button id="toIndex">Lihat Website</button>
+          <button id="logout" class="logout">Logout</button>
+        </div>
+      </div>
+
+      <hr style="margin:20px 0;border:0;border-top:1px solid #333">
+
+      <!-- === FORM TAMBAH / EDIT VIDEO === -->
+      <h3>Tambah / Edit Video</h3>
+      <input type="text" id="title" placeholder="Judul video">
+      <input type="text" id="url" placeholder="Link video (mp4 / embed)">
+      <input type="text" id="thumbnail" placeholder="Link thumbnail">
+      <input type="number" id="views" placeholder="Jumlah views (opsional)">
+      <button id="saveVideo">Simpan Video</button>
+
+      <hr style="margin:20px 0;border:0;border-top:1px solid #333">
+
+      <!-- === BAGIAN PENCARIAN VIDEO === -->
+      <h3>Daftar Video</h3>
+      <input type="search" id="searchVideo" placeholder="Cari berdasarkan judul...">
+      <div id="videoList" class="grid"></div>
+
+      <hr style="margin:20px 0;border:0;border-top:1px solid #333">
+
+      <!-- === BAGIAN STATISTIK === -->
+      <h3>Statistik Situs</h3>
+      <div id="stats"></div>
+      <button id="editStats">Edit Statistik</button>
+
+      <hr style="margin:20px 0;border:0;border-top:1px solid #333">
+
+      <!-- === BAGIAN GANTI PASSWORD === -->
+      <h3>Ganti Password Admin</h3>
+      <input type="password" id="newPassword" placeholder="Password baru">
+      <button id="savePassword">Ubah Password</button>
+    </div>
+
   </div>
 
   <script>
-    const STORAGE_VIDEOS = 'videos';
-    const VISITOR_PREFIX = 'visitors_';
-    const PASSWORD_KEY = 'admin_password';
-    const PER_PAGE = 20;
+    // === KONFIGURASI REPOSITORY GITHUB ===
+    const GITHUB_USER = "Fionks";
+    const REPO = "Website-xxx";
+    const BRANCH = "main";
 
-    const loginScreen = document.getElementById('login');
-    const loginBtn = document.getElementById('loginBtn');
-    const passwordInput = document.getElementById('passwordInput');
-    const loginTitle = document.getElementById('loginTitle');
-    const app = document.getElementById('app');
+    const RAW = `https://raw.githubusercontent.com/${GITHUB_USER}/${REPO}/${BRANCH}`;
+    const API = `https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents`;
 
-    function getJakartaDateString() {
-      const now = new Date();
-      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-      const jakarta = new Date(utc + (7 * 60 * 60000));
-      const yyyy = jakarta.getFullYear();
-      const mm = String(jakarta.getMonth() + 1).padStart(2, '0');
-      const dd = String(jakarta.getDate()).padStart(2, '0');
-      return `${yyyy}-${mm}-${dd}`;
+    let videos = [];
+    let stats = {};
+    let adminPass = "";
+
+    // === ELEMEN DOM ===
+    const loginSection = document.getElementById("loginSection");
+    const adminPanel = document.getElementById("adminPanel");
+    const passwordInput = document.getElementById("passwordInput");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logout");
+    const toIndexBtn = document.getElementById("toIndex");
+    const videoList = document.getElementById("videoList");
+    const searchVideo = document.getElementById("searchVideo");
+    const saveVideoBtn = document.getElementById("saveVideo");
+
+    // === FUNGSI: LOAD JSON DARI GITHUB ===
+    async function loadJSON(path) {
+      const res = await fetch(`${RAW}/${path}?_=${Date.now()}`);
+      if (!res.ok) throw new Error(res.status);
+      return res.json();
     }
 
-    function getVisitorsKeyForToday() {
-      return VISITOR_PREFIX + getJakartaDateString();
-    }
-
-    function getVisitorsToday() {
-      return parseInt(localStorage.getItem(getVisitorsKeyForToday()) || '0', 10);
-    }
-
-    function setVisitorsToday(val) {
-      localStorage.setItem(getVisitorsKeyForToday(), String(val));
-    }
-
-    function getVideos() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_VIDEOS) || '[]'); }
-      catch { return []; }
-    }
-
-    function saveVideos(v) { localStorage.setItem(STORAGE_VIDEOS, JSON.stringify(v)); }
-
-    function getViewsKey(id) { return `views_${id}`; }
-    function getViews(id) { return parseInt(localStorage.getItem(getViewsKey(id)) || '0', 10); }
-    function setViews(id, val) { localStorage.setItem(getViewsKey(id), String(val)); }
-
-    function checkLogin() {
-      const savedPass = localStorage.getItem(PASSWORD_KEY);
-      if (!savedPass) {
-        loginTitle.textContent = "Atur Password Baru";
-        loginBtn.textContent = "Simpan Password";
+    // === FUNGSI: DEKODE BASE64 (DARI GITHUB API) ===
+    function decodeBase64(str) {
+      try {
+        return decodeURIComponent(escape(atob(str)));
+      } catch (e) {
+        return atob(str);
       }
     }
 
-    loginBtn.onclick = () => {
-      const input = passwordInput.value.trim();
-      if (!input) return alert("Masukkan password!");
+    // === FUNGSI: MENGAMBIL DATA JSON + SHA ===
+    async function getGitHubFile(file) {
+      const res = await fetch(`${API}/${file}?ref=${BRANCH}`);
+      const data = await res.json();
+      const content = decodeBase64(data.content);
+      return { json: JSON.parse(content), sha: data.sha };
+    }
 
-      const saved = localStorage.getItem(PASSWORD_KEY);
-      if (!saved) {
-        localStorage.setItem(PASSWORD_KEY, input);
-        alert("Password disimpan. Silakan login kembali.");
-        location.reload();
-      } else {
-        if (input === saved) {
-          loginScreen.style.display = "none";
-          app.style.display = "block";
-          initAdmin();
-        } else {
-          alert("Password salah!");
-        }
-      }
-    };
-
-    const titleInput = document.getElementById('title');
-    const urlInput = document.getElementById('url');
-    const thumbInput = document.getElementById('thumbnail');
-    const viewsInput = document.getElementById('views');
-    const saveBtn = document.getElementById('saveBtn');
-    const grid = document.getElementById('grid');
-    const prevBtn = document.getElementById('prev');
-    const nextBtn = document.getElementById('next');
-    const pageInfo = document.getElementById('page-info');
-    const totalVideosEl = document.getElementById('totalVideos');
-    const searchInput = document.getElementById('search');
-    const visitorCount = document.getElementById('visitorCount');
-    const saveVisitor = document.getElementById('saveVisitor');
-    const toHomeBtn = document.getElementById('toHome');
-    const changePassBtn = document.getElementById('changePassBtn');
-
-    let currentPage = 1, query = '', editId = null;
-
-    function renderGrid() {
-      let vids = getVideos();
-      if (query) vids = vids.filter(v => v.title.toLowerCase().includes(query.toLowerCase()));
-      const total = vids.length;
-      totalVideosEl.textContent = `Total video: ${total}`;
-      const totalPages = Math.ceil(total / PER_PAGE) || 1;
-      if (currentPage > totalPages) currentPage = totalPages;
-      const slice = vids.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
-      grid.innerHTML = '';
-      slice.forEach(v => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div class='thumb' style='background-image:url(${v.thumbnail})'></div>
-          <div class='meta'>
-            <h3>${v.title}</h3>
-            <p style='font-size:13px;color:#9ca3af;'>Views: ${getViews(v.id)}</p>
-            <button class='edit-btn'>Edit</button>
-            <button class='del-btn'>Hapus</button>
-          </div>`;
-        card.querySelector('.edit-btn').onclick = () => editVideo(v.id);
-        card.querySelector('.del-btn').onclick = () => deleteVideo(v.id);
-        grid.appendChild(card);
+    // === FUNGSI: SIMPAN FILE KE GITHUB ===
+    async function saveToGitHub(file, json, sha, token, msg) {
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(json, null, 2))));
+      const res = await fetch(`${API}/${file}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `token ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: msg,
+          content,
+          sha,
+          branch: BRANCH
+        })
       });
-      prevBtn.disabled = currentPage === 1;
-      nextBtn.disabled = currentPage === totalPages;
-      pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
+      return res.json();
     }
 
-    saveBtn.onclick = () => {
-      const title = titleInput.value.trim();
-      const url = urlInput.value.trim();
-      const thumb = thumbInput.value.trim();
-      const views = parseInt(viewsInput.value || '0', 10);
-      if (!title || !url || !thumb) return alert('Lengkapi semua kolom.');
-      let vids = getVideos();
-      if (editId) {
-        vids = vids.map(v => v.id === editId ? { ...v, title, url, thumbnail: thumb } : v);
-        setViews(editId, views);
-        editId = null;
+    // === LOGIN ADMIN ===
+    async function checkLogin() {
+      const data = await loadJSON("admin.json");
+      adminPass = data.password;
+      const input = passwordInput.value.trim();
+      if (input === adminPass) {
+        loginSection.style.display = "none";
+        adminPanel.style.display = "block";
+        loadAllData();
       } else {
-        const id = Date.now();
-        vids.unshift({ id, title, url, thumbnail: thumb, timestamp: Date.now() });
-        setViews(id, views);
+        alert("Password salah!");
       }
-      saveVideos(vids);
-      titleInput.value = urlInput.value = thumbInput.value = viewsInput.value = '';
-      renderGrid();
-      alert('Video disimpan!');
+    }
+    loginBtn.onclick = checkLogin;
+
+    // === LOGOUT ===
+    logoutBtn.onclick = () => {
+      adminPanel.style.display = "none";
+      loginSection.style.display = "block";
+      passwordInput.value = "";
     };
 
-    function editVideo(id) {
-      const v = getVideos().find(x => x.id === id);
-      if (!v) return;
-      titleInput.value = v.title;
-      urlInput.value = v.url;
-      thumbInput.value = v.thumbnail;
-      viewsInput.value = getViews(id);
-      editId = id;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    // === KE HALAMAN INDEX ===
+    toIndexBtn.onclick = () => window.open(`https://${GITHUB_USER}.github.io/${REPO}/`, "_blank");
+
+    // === LOAD SEMUA DATA ===
+    async function loadAllData() {
+      const [vid, stat] = await Promise.all([
+        loadJSON("videos.json"),
+        loadJSON("stats.json")
+      ]);
+      videos = vid;
+      stats = stat;
+      renderVideoList();
+      renderStats();
     }
 
-    function deleteVideo(id) {
-      if (!confirm('Hapus video ini?')) return;
-      saveVideos(getVideos().filter(v => v.id !== id));
-      localStorage.removeItem(getViewsKey(id));
-      renderGrid();
+    // === RENDER VIDEO LIST ===
+    function renderVideoList(list = videos) {
+      videoList.innerHTML = "";
+      list.forEach((v, i) => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `
+          <div class="thumb" style="background-image:url('${v.thumbnail}')"></div>
+          <div class="title">${v.title}</div>
+          <div>Views: ${v.views}</div>
+          <button onclick="editVideo(${i})">Edit</button>
+          <button onclick="deleteVideo(${i})" class="logout">Hapus</button>
+        `;
+        videoList.appendChild(div);
+      });
     }
 
-    function loadVisitors() { visitorCount.value = getVisitorsToday(); }
-    saveVisitor.onclick = () => {
-      const val = parseInt(visitorCount.value || '0', 10);
-      setVisitorsToday(val);
-      alert('Jumlah pengunjung diperbarui!');
+    // === TAMBAH / EDIT VIDEO ===
+    let editIndex = null;
+    function editVideo(i) {
+      const v = videos[i];
+      document.getElementById("title").value = v.title;
+      document.getElementById("url").value = v.url;
+      document.getElementById("thumbnail").value = v.thumbnail;
+      document.getElementById("views").value = v.views;
+      editIndex = i;
+    }
+
+    async function deleteVideo(i) {
+      if (!confirm("Yakin ingin menghapus video ini?")) return;
+      videos.splice(i, 1);
+      await saveDataToGitHub("videos.json", videos, "Hapus video");
+      renderVideoList();
+    }
+
+    saveVideoBtn.onclick = async () => {
+      const t = document.getElementById("title").value.trim();
+      const u = document.getElementById("url").value.trim();
+      const th = document.getElementById("thumbnail").value.trim();
+      const v = parseInt(document.getElementById("views").value) || 0;
+
+      if (!t || !u || !th) return alert("Lengkapi semua kolom!");
+      const obj = { title: t, url: u, thumbnail: th, views: v };
+
+      if (editIndex !== null) {
+        videos[editIndex] = obj;
+        editIndex = null;
+      } else {
+        videos.unshift(obj);
+      }
+      await saveDataToGitHub("videos.json", videos, "Update daftar video");
+      renderVideoList();
+      alert("Video disimpan!");
     };
 
-    prevBtn.onclick = () => { currentPage--; renderGrid(); };
-    nextBtn.onclick = () => { currentPage++; renderGrid(); };
-    searchInput.oninput = e => { query = e.target.value; currentPage = 1; renderGrid(); };
-    toHomeBtn.onclick = () => { window.open('index.html', '_blank'); };
+    // === SIMPAN DATA KE GITHUB ===
+    async function saveDataToGitHub(file, data, message) {
+      const token = prompt("Masukkan GitHub token kamu:");
+      const { sha } = await getGitHubFile(file);
+      await saveToGitHub(file, data, sha, token, message);
+    }
 
-    changePassBtn.onclick = () => {
-      const oldPass = prompt("Masukkan password lama:");
-      const saved = localStorage.getItem(PASSWORD_KEY);
-      if (oldPass !== saved) return alert("Password lama salah!");
-      const newPass = prompt("Masukkan password baru:");
-      if (!newPass) return alert("Password tidak boleh kosong!");
-      localStorage.setItem(PASSWORD_KEY, newPass);
+    // === PENCARIAN VIDEO ===
+    searchVideo.oninput = e => {
+      const q = e.target.value.toLowerCase();
+      renderVideoList(videos.filter(v => v.title.toLowerCase().includes(q)));
+    };
+
+    // === STATISTIK ===
+    function renderStats() {
+      document.getElementById("stats").innerHTML = `
+        Total Pengunjung: ${stats.totalVisitors}<br>
+        Pengunjung Hari Ini: ${stats.todayVisitors}<br>
+        Total Views: ${stats.totalViews}
+      `;
+    }
+
+    document.getElementById("editStats").onclick = async () => {
+      stats.totalVisitors = parseInt(prompt("Total pengunjung:", stats.totalVisitors)) || stats.totalVisitors;
+      stats.todayVisitors = parseInt(prompt("Pengunjung hari ini:", stats.todayVisitors)) || stats.todayVisitors;
+      stats.totalViews = parseInt(prompt("Total views:", stats.totalViews)) || stats.totalViews;
+      await saveDataToGitHub("stats.json", stats, "Edit statistik");
+      renderStats();
+    };
+
+    // === GANTI PASSWORD ===
+    document.getElementById("savePassword").onclick = async () => {
+      const newPass = document.getElementById("newPassword").value.trim();
+      if (!newPass) return alert("Masukkan password baru!");
+      const token = prompt("Masukkan GitHub token kamu:");
+      const { sha } = await getGitHubFile("admin.json");
+      await saveToGitHub("admin.json", { password: newPass }, sha, token, "Ganti password admin");
       alert("Password berhasil diubah!");
     };
-
-    function initAdmin() {
-      renderGrid();
-      loadVisitors();
-    }
-
-    checkLogin();
   </script>
 </body>
 </html>
