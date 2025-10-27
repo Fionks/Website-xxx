@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": 1698240000000,
+    "title": "Contoh Video 1",
+    "url": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+    "thumbnail": "https://picsum.photos/640/360?random=1",
+    "views": 0,
+    "timestamp": 1698240000000
+  }
+]
